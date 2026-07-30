@@ -1,0 +1,41 @@
+# get nodes 
+kubectl get node 
+kubectl describe node node_name 
+
+# get pods 
+kubectl get pod -A
+kubectl describe pod pod_name -n namespace
+kubectl get pod -n kube-system 
+kubectl run nginx --image=nginx:latest --port=80  --namespace namespace  
+kubectl delete pod nginx -n namespace_name
+
+# namespace command 
+kubectl get namespace 
+kubectl create namespace name 
+kubectl delete namespace name 
+
+# basic command of kubectl 
+kubectl logs podname -n namespace
+
+# deployment create command 
+kubectl create deployment name --image=nginx --port=80 
+kubectl expose deployment name --type=Nodeport/ClusterIp 
+
+# setup and check LimitRanges
+kubectl get limitranges -A
+kubectl describe  limitranges -n database
+kubectl delete  limitranges  database-limit-range -n database
+
+# create secret 
+echo -n redhat | base64    // encode 
+echo -n encodehas | base64 -d //decode 
+
+# k9s tools installation 
+ https://github.com/derailed/k9s
+
+ curl -sS https://webinstall.dev/k9s | bash 
+
+ k9s is your command
+
+ : + shift ---- command mode 
+

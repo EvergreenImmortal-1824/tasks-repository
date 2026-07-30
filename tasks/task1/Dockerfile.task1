@@ -1,0 +1,6 @@
+FROM nginx:latest
+
+COPY ./chain_summit/* /usr/share/nginx/html/
+
+EXPOSE 80
+

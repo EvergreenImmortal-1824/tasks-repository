@@ -1,0 +1,8 @@
+FROM httpd:latest
+
+COPY task.conf /etc/httpd/conf.d/task.conf
+
+COPY ./the_catalyst/* /usr/local/apache2/htdocs/
+
+EXPOSE 80
+

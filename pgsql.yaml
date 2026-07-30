@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pgsql
+  namespace: webapp
+  labels:
+    app: pgsql
+spec:
+  containers:
+  - name: pgsql
+    image: postgres:17-alpine  # Fixed to a valid, stable version
+    resources:
+      limits:
+        cpu: "900m"
+        memory: "600Mi"
+      requests:
+        cpu: "750m"
+        memory: "450Mi"
+    ports:
+    - containerPort: 5432  # Fixed to standard PostgreSQL port
+    env:
+    - name: POSTGRES_DB  # Corrected from POSTGRES_DATABASE
+      value: "mydb"
+    - name: POSTGRES_USER
+      value: "jenish"
+    - name: POSTGRES_PASSWORD
+      value: "redhat@123"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgsql
+  namespace: webapp
+spec:
+  selector:
+    app: pgsql
+  ports:
+  - name: pgsql
+    port: 5432        # Fixed to route database traffic correctly
+    targetPort: 5432  # Fixed to match container port
+  type: NodePort

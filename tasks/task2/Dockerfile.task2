@@ -1,0 +1,6 @@
+FROM httpd:latest
+
+COPY ./christmas_piano/* /usr/local/apache2/htdocs/
+
+EXPOSE 80
+

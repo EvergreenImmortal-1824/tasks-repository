@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pgadmin
+  namespace: webapp
+  labels:
+    app: pgadmin
+spec:
+  containers:
+  - name: pgadmin
+    image: dpage/pgadmin4:latest
+    resources:
+      limits:
+        cpu: "300m"
+        memory: "400Mi"
+      requests:
+        cpu: "150m"
+        memory: "200Mi"
+    ports:
+    - containerPort: 80
+    env:
+    - name: PGADMIN_DEFAULT_EMAIL
+      value: "admin@pgadmin.org"
+    - name: PGADMIN_DEFAULT_PASSWORD
+      value: "admin@1234"
+    # Added required security context for internal storage access
+    securityContext:
+      runAsUser: 5050
+      runAsGroup: 5050
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin
+  namespace: webapp
+spec:
+  selector:
+    app: pgadmin
+  ports:
+  - name: pgadmin
+    port: 80
+    targetPort: 80
+  type: NodePort
