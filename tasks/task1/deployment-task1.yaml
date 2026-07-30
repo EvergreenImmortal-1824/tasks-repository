@@ -2,8 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: task1
-labels:
-    app: task1-app
 spec:
   selector:
     matchLabels:
@@ -34,7 +32,7 @@ metadata:
   name: task1-app-service
 spec:
   selector:
-    app: task1-app
+    app: task1-webapp
   ports:
   - port: 8000
     targetPort: 80
