@@ -38,4 +38,4 @@ spec:
   ports:
   - port: 8001
     targetPort: 80
-    type: NodePort
+  type: NodePort
