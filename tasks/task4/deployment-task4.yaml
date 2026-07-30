@@ -32,7 +32,7 @@ metadata:
   name: task4-app-service
 spec:
   selector:
-    app: task4-app
+    app: task4-webapp
   ports:
   - port: 8004
     targetPort: 80

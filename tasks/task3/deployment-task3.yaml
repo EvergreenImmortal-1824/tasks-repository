@@ -12,7 +12,7 @@ spec:
         app: task3-webapp
     spec:
       containers:
-      - name: task1-container
+      - name: task3-container
         image: jenishchhowala/tasks-repository:task3-v1
         resources:
           requests:
@@ -32,7 +32,7 @@ metadata:
   name: task3-app-service
 spec:
   selector:
-    app: task3-app
+    app: task3-webapp
   ports:
   - port: 8003
     targetPort: 80

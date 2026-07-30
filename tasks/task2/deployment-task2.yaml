@@ -32,7 +32,7 @@ metadata:
   name: task2-app-service
 spec:
   selector:
-    app: task2-app
+    app: task2-webapp
   ports:
   - port: 8001
     targetPort: 80
