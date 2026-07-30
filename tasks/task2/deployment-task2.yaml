@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: task1
+  name: task2
 labels:
-    app: task1-app
+    app: task2-app
 spec:
   selector:
     matchLabels:
-      app: task1-webapp
+      app: task2-webapp
   template:
     metadata:
       labels:
-        app: task1-webapp
+        app: task2-webapp
     spec:
       containers:
-      - name: task1-container
-        image: jenishchhowala/tasks-repository:task1-v1
+      - name: task2-container
+        image: jenishchhowala/tasks-repository:task2-v1
         resources:
           requests:
             memory: "100Mi"
@@ -31,11 +31,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: task1-app-service
+  name: task2-app-service
 spec:
   selector:
-    app: task1-app
+    app: task2-app
   ports:
-  - port: 8000
+  - port: 8001
     targetPort: 80
     type: NodePort
