@@ -27,7 +27,7 @@ spec:
             cpu: "700m"
         ports:
         - containerPort: 8081
-          name: mongo-express-port
+          name: mongo-port
         env:
           - name: ME_CONFIG_MONGODB_ADMINUSERNAME
             valueFrom:

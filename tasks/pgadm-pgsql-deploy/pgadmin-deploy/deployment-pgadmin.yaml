@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgdmin-deployment
+  namespace: database
+  labels:
+      app: pgadmin-pgsql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin-pgsql
+  template:
+    metadata:
+      labels:
+        app: pgadmin-pgsql
+    spec:
+      containers:
+      - name: pgadmin-pgsql-container
+        image: dpage/pgadmin4:latest
+        resources:
+          requests:
+            memory: "400Mi"
+            cpu: "500m"
+          limits:
+            memory: "600Mi"
+            cpu: "700m"
+        ports:
+        - containerPort: 80
+        env:
+        - name: PGADMIN_DEFAULT_EMAIL
+          valueFrom:
+            secretKeyRef:
+              name: pgadmin-credentials
+              key: email
+        - name: PGADMIN_DEFAULT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: pgadmin-credentials
+              key: password
