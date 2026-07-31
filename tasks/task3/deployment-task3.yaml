@@ -2,7 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: task3
-  labels: task3-webapp
+  labels: 
+    app: task3-webapp
 spec:
   selector:
     matchLabels:
