@@ -1,8 +1,13 @@
 FROM httpd:latest
 
-COPY task.conf /etc/httpd/conf.d/task.conf
-
+# Copy your HTML/CSS template assets
 COPY ./the_catalyst/* /usr/local/apache2/htdocs/
 
-EXPOSE 80
+# Copy your configuration file to the real Apache conf folder
+COPY task.conf /usr/local/apache2/conf/extra/task.conf
 
+# Force Apache to load your custom extra configuration file
+RUN echo "Include /usr/local/apache2/conf/extra/task.conf" >> /usr/local/apache2/conf/httpd.conf
+
+# Change the default port documentation layout to 8000
+EXPOSE 8000
