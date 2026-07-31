@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: task3
+  labels: task3-webapp
 spec:
   selector:
     matchLabels:
@@ -22,7 +23,7 @@ spec:
             memory: "300Mi"
             cpu: "500m"
         ports:
-        - containerPort: 80
+        - containerPort: 8000
 
 ---
 
@@ -34,6 +35,6 @@ spec:
   selector:
     app: task3-webapp
   ports:
-  - port: 8000
-    targetPort: 80
+  - port: 80
+    targetPort: 8000
   type: NodePort

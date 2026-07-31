@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgsql-app
+  namespace: database
+  labels:
+      app: pgsql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgsql
+  template:
+    metadata:
+      labels:
+        app: pgsql
+    spec:
+      containers:
+      - name: pgsql-container
+        image: postgres:17-alpine
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "700m"
+          limits:
+            memory: "700Mi"
+            cpu: "900m"
+        ports:
+        - containerPort: 5432
+          name: postgres-port
+        env:
+          - name: POSTGRES_DB
+            value: pguserdb 
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                name: pguser-credentials
+                key: user
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: pguser-credentials
+                key: password

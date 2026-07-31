@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-express-deployment
+  namespace: database
+  labels:
+      app: mongo-express
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo-express
+  template:
+    metadata:
+      labels:
+        app: mongo-express
+    spec:
+      containers:
+      - name: mongo-express-container
+        image: mongo-express:latest
+        resources:
+          requests:
+            memory: "400Mi"
+            cpu: "500m"
+          limits:
+            memory: "600Mi"
+            cpu: "700m"
+        ports:
+        - containerPort: 8081
+          name: mongo-express-port
+        env:
+          - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-credentials
+                key: root_user
+          - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-credentials
+                key: root_password
+          - name: ME_CONFIG_MONGODB_SERVER
+            value: mongodb-svc
