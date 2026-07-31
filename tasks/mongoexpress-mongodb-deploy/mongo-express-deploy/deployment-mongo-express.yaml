@@ -29,6 +29,12 @@ spec:
         - containerPort: 8081
           name: mongo-port
         env:
+        - name: ME_CONFIG_MONGODB_SERVER
+            value: mongodb-svc
+        - name: ME_CONFIG_MONGODB_PORT
+          value: "27017"
+        - name: ME_CONFIG_MONGODB_ENABLE_ADMIN
+          value: "true"   # <--- Tells Mongo Express to connect as Roo
           - name: ME_CONFIG_MONGODB_ADMINUSERNAME
             valueFrom:
               secretKeyRef:
@@ -39,5 +45,3 @@ spec:
               secretKeyRef:
                 name: mongo-credentials
                 key: root_password
-          - name: ME_CONFIG_MONGODB_SERVER
-            value: mongodb-svc
