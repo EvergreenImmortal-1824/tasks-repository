@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name:  chainsummit
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: chainsummit-pod
+  namespace: chainsummit
+  labels:
+    app: summit-la
+spec:
+  containers:
+  - name: chainsummit
+    image: jenishchhowala/tasksrepository:task1-v1
+    resources:
+      limits:
+        cpu: "500m"
+        memory: "128Mi"
+    ports:
+    - containerPort:  80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: chainsummit-svc
+  namespace: chainsummit
+spec:
+  selector:
+    app: summit-la
+  ports:
+  - port: 80
+    targetPort: 80
+
+---
+
+# https://kubernetes.io/docs/concepts/services-networking/ingress/#the-ingress-resource
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: chain-ingress
+  namespace: chainsummit
+  labels:
+    app: summit-la
+  annotations: 
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: summit-app 
+  rules:
+  - host: chainsummit.jenishchhowala.site
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: chainsummit-svc
+            port:
+              number: 80
