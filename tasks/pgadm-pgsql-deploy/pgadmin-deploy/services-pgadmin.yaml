@@ -20,8 +20,6 @@ kind: Ingress
 metadata:
   name: pgadmin-ingress
   namespace: database
-  labels:
-    app: pgadmin-pgsql
   annotations: 
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
