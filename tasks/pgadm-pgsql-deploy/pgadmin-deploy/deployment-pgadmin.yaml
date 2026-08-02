@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: pgdmin-deployment
+  name: pgadmin-deployment
   namespace: database
   labels:
       app: pgadmin-pgsql
