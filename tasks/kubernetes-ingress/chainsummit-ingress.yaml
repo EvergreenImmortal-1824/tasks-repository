@@ -13,7 +13,7 @@ metadata:
 spec:
   containers:
   - name: chainsummit
-    image: jenishchhowala/tasksrepository:task1-v1
+    image: jenishchhowala/tasks-repository:task1-v1
     resources:
       limits:
         cpu: "500m"
