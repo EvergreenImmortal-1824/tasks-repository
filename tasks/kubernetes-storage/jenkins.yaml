@@ -36,8 +36,10 @@ subjects:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: jenkins
+  name: jenkins-app
   namespace: jenkins
+  labels:
+    app: jenkins-server
 spec:
   replicas: 1
   selector:
@@ -57,6 +59,10 @@ spec:
             runAsUser: 1000
             ### runAsGroup: 1000
       serviceAccountName: jenkins-admin
+      volumes:
+        - name: jenkins-data
+          persistentVolumeClaim:
+            claimName: jenkins-pvc
       containers:
         - name: jenkins
           image: jenkins/jenkins:lts
@@ -74,6 +80,9 @@ spec:
               containerPort: 8080
             - name: jnlpport
               containerPort: 50000
+          volumeMounts:
+            - name: jenkins-data
+              mountPath: /var/jenkins_home
           livenessProbe:
             httpGet:
               path: "/login"
@@ -97,6 +106,8 @@ kind: Service
 metadata:
   name: jenkins-service
   namespace: jenkins
+  labels:
+    app: jenkins-server
   annotations:
       prometheus.io/scrape: 'true'
       prometheus.io/path:   /
@@ -118,6 +129,8 @@ kind: Ingress
 metadata:
   name: jenkins-ingress
   namespace: jenkins
+  labels:
+    app: jenkins-server
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
@@ -133,3 +146,19 @@ spec:
             name: jenkins-service
             port:
               number: 8080
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jenkins-pvc
+  namespace: jenkins
+  labels:
+    app: jenkins-server
+spec:
+  storageClassName: local-path
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
