@@ -1,0 +1,57 @@
+# git repo ebs : https://github.com/kubernetes-sigs/aws-ebs-csi-driver/blob/master/docs/install.md
+# kubectl apply -k "github.com/kubernetes-sigs/aws-ebs-csi-driver/deploy/kubernetes/overlays/stable/?ref=release-1.61"
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: ebs-sc
+provisioner: ebs.csi.aws.com
+volumeBindingMode: WaitForFirstConsumer
+parameters:
+  csi.storage.k8s.io/fstype: xfs
+  type: gp2
+  encrypted: "true"
+allowVolumeExpansion: true
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ebs-pvc
+  labels:
+    app: ebs-lb
+spec:
+  resources:
+    requests:
+      storage: 2Gi
+  storageClassName: ebs-sc
+  accessModes:
+    - ReadWriteOnce
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ebs-test-pod
+  labels:
+    app: ebs-lb
+spec:
+  volumes:
+  - name: ebs-vol
+    persistentVolumeClaim:
+      claimName: ebs-pvc
+  containers:
+  - name: myapp
+    image: ubuntu:latest
+    command:
+      - sleep
+      - "3600"
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+      - name: ebs-vol
+        mountPath: /opt
+  
+  
+
