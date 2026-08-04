@@ -166,12 +166,12 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: jenkins-pvc
+  name: jenkins-pv
   labels:
     type: jenkins-server
 spec:
   capacity:
-    storage: 1Gi
+    storage: 2Gi
   volumeMode: Filesystem
   accessModes:
     - ReadWriteOnce
