@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-app
+  labels:
+    app: testapp
+spec:
+  volumes:
+  - name: prometheus-config
+    configMap:
+      name: test-configmap
+  containers:
+  - name: test-app-pod
+    image: ubuntu:latest
+    command:
+      - sleep
+      - "3600"
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+      - name: prometheus-config
+        mountPath: /opt
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: test-configmap
+  labels: 
+    app: testapp
+data:
+  prometheus.yml |
+    # my global config
+    global:
+      scrape_interval: 15s # Set the scrape interval to every 15 seconds. Default is every 1 minute.
+      evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+      # scrape_timeout is set to the global default (10s).
+
+    # Alertmanager configuration
+    alerting:
+      alertmanagers:
+        - static_configs:
+            - targets:
+              # - alertmanager:9093
+
+    # Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+    rule_files:
+      # - "first_rules.yml"
+      # - "second_rules.yml"
+
+    # A scrape configuration containing exactly one endpoint to scrape:
+    # Here it's Prometheus itself.
+    scrape_configs:
+      # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+      - job_name: "prometheus"
+
+        # metrics_path defaults to '/metrics'
+        # scheme defaults to 'http'.
+
+        static_configs:
+          - targets: ["localhost:9090"]
+          # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+            labels:
+              app: "prometheus"
+
+        static_configs:
+          - targets: ["172.31.0.91:9090"]
+          # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+            labels:
+              app: "java"   
+
+        static_configs:
+          - targets: ["172.31.32.95:9090"]
+          # The label name is added as a label `label_name=<label_value>` to any timeseries scraped from this config.
+            labels:
+              app: "python"         
+
+
+
