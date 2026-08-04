@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nfs-store
+  labels:
+    name: nfs-store-lb
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-store-vol1
+  labels:
+    type: nfs-store-lb
+spec:
+  capacity:
+    storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+  nfs:
+    path: /data/podapp1
+    server: 172.31.7.157
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nfs-store-data-vol1
+  namespace: nfs-store
+  labels:
+    app: nfs-store-lb
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nfs-pod
+  namespace: nfs-store
+  labels:
+    app: nfs-store-lb
+spec:
+  volumes:
+    - name: data-storage
+      persistentVolumeClaim:
+        claimName: nfs-store-data-vol1
+  containers:
+  - name: nfs-pod-app
+    image: ubuntu:latest
+    command:
+      - sleep
+      - "3600"
+    volumeMounts:
+      - name: data-storage
+        mountPath: /opt
