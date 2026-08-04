@@ -8,6 +8,9 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: testpvc
+  namespace: autotest
+  labels:
+    app: myapp
 spec:
   resources:
     requests:
@@ -22,6 +25,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: myapp
+  namespace: autotest
   labels:
     app: myapp
 spec:
