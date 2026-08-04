@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: autotest
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: testpvc
+spec:
+  resources:
+    requests:
+      storage: 1Gi
+  volumeMode: Filesystem
+  storageClassName: nfs-csi
+  accessModes:
+    - ReadWriteOnce
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    app: myapp
+spec:
+  containers:
+  - name: myapp-pod
+    image: ubuntu:latest
+    command:
+      - sleep
+      - "3600"
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    volumeMounts:
+      - name: data-mount
+        mountPath: /opt
+  volumes:
+  - name: data-mount
+    persistentVolumeClaim:
+      claimName: testpvc
