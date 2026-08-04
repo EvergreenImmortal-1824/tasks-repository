@@ -61,6 +61,7 @@ spec:
     command:
       - sleep
       - "3600"
+    tty: true
     volumeMounts:
       - name: data-storage
         mountPath: /opt
