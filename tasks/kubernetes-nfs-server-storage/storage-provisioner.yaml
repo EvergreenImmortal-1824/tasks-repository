@@ -14,4 +14,4 @@ reclaimPolicy: Delete
 volumeBindingMode: WaitForFirstConsumer
 allowVolumeExpansion: true
 mountOptions:
-  - nfsvers=4.3
+  - nfsvers=4.1
