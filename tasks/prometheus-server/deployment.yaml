@@ -17,7 +17,7 @@ spec:
     spec:
       securityContext:
         fsGroup: 65534
-      serviceAccountName: prometheus
+      serviceAccountName: prometheus-sac
       containers:
         - name: prometheus
           image: prom/prometheus
@@ -50,4 +50,3 @@ spec:
           persistentVolumeClaim:
             claimName: prometheus-pvc
 
-            
