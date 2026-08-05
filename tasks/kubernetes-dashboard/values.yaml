@@ -242,7 +242,7 @@ api:
   serviceLabels: {}
   serviceAnnotations: {}
 
-# WEB UI deployment configuration
+# Inside your values.yaml file under the WEB UI deployment block:
 web:
   role: web
   image:
@@ -253,32 +253,19 @@ web:
     revisionHistoryLimit: 10
   service:
     type: ClusterIP
-    extraSpec: ~
+  extraSpec: ~
   containers:
     ports:
       - name: web
         containerPort: 8000
         protocol: TCP
-    # Additional container arguments
-    # Full list of arguments: https://github.com/kubernetes/dashboard/blob/master/docs/common/arguments.md
-    # args:
-    # - --system-banner="Welcome to the Kubernetes Dashboard"
-    args: []
-    # Additional container environment variables
-    # env:
-    # - name: SOME_VAR
-    #   value: 'some value'
-    - --allow-insecure-login
+    # 1. Force the Web server to accept outside traffic over plain HTTP
+    args:
+      - --insecure-bind-address=0.0.0.0 # 👈 Forces binding to all interfaces instead of 127.0.0.1
     env: []
-    # Additional volume mounts
-    # - mountPath: /kubeconfig
-    #   name: dashboard-kubeconfig
-    #   readOnly: true
     volumeMounts:
-      # Create volume mount to store logs (required)
       - mountPath: /tmp
         name: tmp-volume
-    # TODO: Validate configuration
     resources:
       requests:
         cpu: 100m
@@ -286,18 +273,11 @@ web:
       limits:
         cpu: 250m
         memory: 400Mi
-  automountServiceAccountToken: true
-  # Additional volumes
-  # - name: dashboard-kubeconfig
-  #   secret:
-  #     defaultMode: 420
-  #     secretName: dashboard-kubeconfig
+    automountServiceAccountToken: true
   volumes:
-    # Create on-disk volume to store exec logs (required)
     - name: tmp-volume
       emptyDir: {}
   nodeSelector: {}
-  # Labels & annotations for WEB UI related resources
   labels: {}
   annotations: {}
   serviceLabels: {}
