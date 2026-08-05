@@ -268,6 +268,7 @@ web:
     # env:
     # - name: SOME_VAR
     #   value: 'some value'
+    - --allow-insecure-login
     env: []
     # Additional volume mounts
     # - mountPath: /kubeconfig
