@@ -378,25 +378,38 @@ metrics-server:
     - --kubelet-preferred-address-types=InternalIP
     - --kubelet-insecure-tls
 
-## Required Kong sub-chart with DBless configuration to act as a gateway
+## Required Kong sub-chart with DBless configuration to act as a gateway 
 ## for our all containers.
 kong:
   enabled: true
-  ## Configuration reference: https://docs.konghq.com/gateway/3.6.x/reference/configuration
+  
+  # 1. Force the database engine off to trigger DB-less operation
   env:
+    database: "off"                      # 👈 MANDATORY for dbless mode to work
     dns_order: LAST,A,CNAME,AAAA,SRV
     plugins: 'off'
     nginx_worker_processes: 1
+
   ingressController:
     enabled: false
+    
   manager:
     enabled: false
+
+  # 2. Point to the configmap containing your declarative routing rules
   dblessConfig:
-    configMap: kong-dbless-config
+    configMap:
+      name: kong-dbless-config           # 👈 Fixed object hierarchy structure
+
+  # 3. Correctly nest the NodePort and HTTP routing rules
   proxy:
-    type: ClusterIP
+    type: NodePort                       # 👈 Safely routes external EC2 traffic
     http:
+      enabled: true                      # 👈 MUST be true to allow web UI traffic
+      nodePort: 32001                    # 👈 Optional: Force a static port (30000-32767)
+    tls:
       enabled: false
+      nodePort: 32002                    # 👈 Optional: Force a static HTTPS port
 
 ## Optional Cert Manager sub-chart configuration
 ## Enable this if you don't already have cert-manager enabled on your cluster.
