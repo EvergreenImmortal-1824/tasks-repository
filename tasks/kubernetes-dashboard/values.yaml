@@ -398,8 +398,7 @@ kong:
 
   # 2. Point to the configmap containing your declarative routing rules
   dblessConfig:
-    configMap:
-      name: kong-dbless-config           # 👈 Fixed object hierarchy structure
+    configMap: kong-dbless-config           # 👈 Fixed object hierarchy structure
 
   # 3. Correctly nest the NodePort and HTTP routing rules
   proxy:
