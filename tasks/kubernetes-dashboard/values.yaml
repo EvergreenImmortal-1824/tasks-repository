@@ -157,7 +157,8 @@ auth:
       - name: auth
         containerPort: 8000
         protocol: TCP
-    args: []
+    args:
+      - --apiserver-skip-tls-verify=true
     env: []
     volumeMounts:
       - mountPath: /tmp
@@ -203,7 +204,9 @@ api:
     # Full list of arguments: https://github.com/kubernetes/dashboard/blob/master/docs/common/arguments.md
     # args:
     # - --system-banner="Welcome to the Kubernetes Dashboard"
-    args: []
+    args: 
+      - --disable-csrf-protection=true   # 👈 MANDATORY for plain HTTP logins to pass
+      - --apiserver-skip-tls-verify=true  # 👈 Bypasses self-signed EC2 master CA checks
     # Additional container environment variables
     # env:
     # - name: SOME_VAR
